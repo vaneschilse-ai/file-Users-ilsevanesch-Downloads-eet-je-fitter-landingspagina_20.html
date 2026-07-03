@@ -1,6 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { SceneLayout } from "../components/SceneLayout";
+import { Narration } from "../components/Narration";
 import { Particles } from "../components/Particles";
 import { LogoBig, Butterfly } from "../components/Logo";
 import { COLORS } from "../theme";
@@ -19,6 +20,7 @@ export const Scene5CTA: React.FC = () => {
 
   return (
     <SceneLayout justify="flex-start" showLogo={false}>
+      <Narration file="scene5.mp3" />
       <AbsoluteFill>
         <Particles />
       </AbsoluteFill>

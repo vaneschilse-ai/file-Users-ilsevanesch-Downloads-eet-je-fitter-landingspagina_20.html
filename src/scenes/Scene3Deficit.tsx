@@ -1,6 +1,7 @@
 import React from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { SceneLayout } from "../components/SceneLayout";
+import { Narration } from "../components/Narration";
 import { Eyebrow, Headline, Body } from "../components/Typo";
 import { COLORS } from "../theme";
 import { HEADLINE_FONT, BODY_FONT } from "../font";
@@ -54,6 +55,7 @@ export const Scene3Deficit: React.FC = () => {
 
   return (
     <SceneLayout justify="flex-start">
+      <Narration file="scene3.mp3" />
       <div style={{ marginTop: 8 }}>
         <Eyebrow delay={0}>Herkenbaar?</Eyebrow>
       </div>
