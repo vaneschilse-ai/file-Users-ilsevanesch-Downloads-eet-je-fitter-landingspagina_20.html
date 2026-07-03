@@ -1,9 +1,10 @@
 import React from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
-import { COLORS, FONT } from "../theme";
+import { COLORS } from "../theme";
+import { HEADLINE_FONT, BODY_FONT } from "../font";
 import { enter, riseIn } from "../helpers";
 
-/** Small pill label above the headline. */
+/** Small pill label above the headline (DM Sans, blush). */
 export const Eyebrow: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   children,
   delay = 0,
@@ -18,14 +19,15 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; delay?: number }> = 
         display: "inline-flex",
         alignItems: "center",
         gap: 12,
-        padding: "12px 24px",
+        padding: "12px 26px",
         borderRadius: 999,
-        border: `1px solid ${COLORS.accent}`,
         background: COLORS.accentSoft,
-        color: COLORS.text,
+        border: `1.5px solid ${COLORS.accent}`,
+        color: COLORS.accentDeep,
+        fontFamily: BODY_FONT,
         fontSize: 30,
-        fontWeight: FONT.semi,
-        letterSpacing: 1,
+        fontWeight: 600,
+        letterSpacing: 2,
         textTransform: "uppercase",
         transform: `translateY(${(1 - p) * 24}px)`,
       }}
@@ -35,13 +37,12 @@ export const Eyebrow: React.FC<{ children: React.ReactNode; delay?: number }> = 
   );
 };
 
-/** Big scene headline (56px+). */
+/** Big scene headline — Playfair Display (56px+). */
 export const Headline: React.FC<{
   children: React.ReactNode;
   delay?: number;
   size?: number;
-  accentWord?: string;
-}> = ({ children, delay = 6, size = 76 }) => {
+}> = ({ children, delay = 6, size = 82 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   return (
@@ -50,12 +51,13 @@ export const Headline: React.FC<{
         ...riseIn(frame, fps, delay, 44),
         margin: 0,
         color: COLORS.text,
+        fontFamily: HEADLINE_FONT,
         fontSize: size,
-        lineHeight: 1.08,
-        fontWeight: FONT.headline,
+        lineHeight: 1.06,
+        fontWeight: 800,
         textAlign: "center",
-        letterSpacing: -1,
-        maxWidth: 900,
+        letterSpacing: -0.5,
+        maxWidth: 920,
       }}
     >
       {children}
@@ -63,7 +65,7 @@ export const Headline: React.FC<{
   );
 };
 
-/** Supporting sentence (36px+). */
+/** Supporting sentence — DM Sans (36px+). */
 export const Body: React.FC<{ children: React.ReactNode; delay?: number }> = ({
   children,
   delay = 14,
@@ -77,14 +79,20 @@ export const Body: React.FC<{ children: React.ReactNode; delay?: number }> = ({
         margin: 0,
         marginTop: 26,
         color: COLORS.textDim,
+        fontFamily: BODY_FONT,
         fontSize: 40,
-        lineHeight: 1.35,
-        fontWeight: FONT.body,
+        lineHeight: 1.36,
+        fontWeight: 400,
         textAlign: "center",
-        maxWidth: 820,
+        maxWidth: 840,
       }}
     >
       {children}
     </p>
   );
 };
+
+/** Accent-coloured emphasis span. */
+export const Accent: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <span style={{ color: COLORS.accentDeep, fontWeight: 600 }}>{children}</span>
+);

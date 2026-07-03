@@ -1,135 +1,97 @@
 import React from "react";
-import { useCurrentFrame, useVideoConfig, interpolate } from "remotion";
+import { useCurrentFrame, useVideoConfig } from "remotion";
 import { SceneLayout } from "../components/SceneLayout";
-import { Eyebrow, Headline } from "../components/Typo";
-import { COLORS, FONT } from "../theme";
-import { enter, countUp } from "../helpers";
+import { Eyebrow, Headline, Body } from "../components/Typo";
+import { COLORS } from "../theme";
+import { HEADLINE_FONT, BODY_FONT } from "../font";
+import { enter } from "../helpers";
 
-// Descending line chart that draws itself (stroke-dashoffset).
-const MuscleChart: React.FC = () => {
+// Energy dipping through the day — self-drawing curve.
+const EnergyCurve: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const draw = enter(frame, fps, 20);
-  const path = "M60 80 L180 130 L300 165 L420 210 L540 250 L660 300";
-  const LEN = 720; // generous over-estimate for the polyline length
-
-  // dot rides the end of the drawn line
-  const pts = [
-    [60, 80],
-    [180, 130],
-    [300, 165],
-    [420, 210],
-    [540, 250],
-    [660, 300],
-  ];
-  const idx = Math.min(pts.length - 1, Math.floor(draw * (pts.length - 1)));
-  const nextIdx = Math.min(pts.length - 1, idx + 1);
-  const seg = draw * (pts.length - 1) - idx;
-  const dotX = pts[idx][0] + (pts[nextIdx][0] - pts[idx][0]) * seg;
-  const dotY = pts[idx][1] + (pts[nextIdx][1] - pts[idx][1]) * seg;
+  // high in the morning, crashes by afternoon, low in the evening
+  const path = "M60 110 C 150 90, 200 250, 320 250 C 430 250, 470 150, 560 175 C 620 195, 650 260, 680 285";
+  const LEN = 820;
 
   return (
-    <svg width={720} height={360} viewBox="0 0 720 360">
-      {/* axes */}
-      <line x1={60} y1={40} x2={60} y2={320} stroke={COLORS.track} strokeWidth={3} />
-      <line x1={60} y1={320} x2={680} y2={320} stroke={COLORS.track} strokeWidth={3} />
-      {/* area under curve */}
-      <path
-        d={`${path} L660 320 L60 320 Z`}
-        fill={COLORS.accentGlow}
-        opacity={draw * 0.5}
-      />
-      {/* the line */}
+    <svg width={720} height={330} viewBox="0 0 720 330">
+      <line x1={60} y1={40} x2={60} y2={290} stroke={COLORS.track} strokeWidth={3} />
+      <line x1={60} y1={290} x2={690} y2={290} stroke={COLORS.track} strokeWidth={3} />
+      <path d={`${path} L680 290 L60 290 Z`} fill={COLORS.accentGlow} opacity={draw * 0.4} />
       <path
         d={path}
         fill="none"
-        stroke={COLORS.accent}
+        stroke={COLORS.accentDeep}
         strokeWidth={7}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeDasharray={LEN}
         strokeDashoffset={LEN * (1 - draw)}
       />
-      {draw > 0.02 && (
-        <circle cx={dotX} cy={dotY} r={12} fill={COLORS.text} stroke={COLORS.accent} strokeWidth={5} />
-      )}
-      <text x={80} y={70} fill={COLORS.textDim} fontSize={28} fontWeight={FONT.semi}>
-        Spiermassa
+      <text x={72} y={72} fill={COLORS.textDim} fontFamily={BODY_FONT} fontSize={28} fontWeight={600}>
+        Energie
       </text>
-      <text x={560} y={352} fill={COLORS.textDim} fontSize={28} fontWeight={FONT.semi}>
-        leeftijd →
-      </text>
+      {[
+        { x: 76, label: "ochtend" },
+        { x: 300, label: "middag" },
+        { x: 560, label: "avond" },
+      ].map((t) => (
+        <text key={t.label} x={t.x} y={320} fill={COLORS.textDim} fontFamily={BODY_FONT} fontSize={26} fontWeight={500}>
+          {t.label}
+        </text>
+      ))}
     </svg>
   );
 };
 
+const chips = ["Energiedip", "Trek in zoet", "Futloos"];
+
 export const Scene3Deficit: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const loss = countUp(frame, fps, 1, 60).toFixed(0);
-  const hunger = enter(frame, fps, 90);
 
   return (
     <SceneLayout justify="flex-start">
       <div style={{ marginTop: 8 }}>
-        <Eyebrow delay={0}>Het gevolg</Eyebrow>
+        <Eyebrow delay={0}>Herkenbaar?</Eyebrow>
       </div>
       <div style={{ marginTop: 26 }}>
-        <Headline delay={6} size={68}>
-          Te weinig eiwit = spierverlies.
+        <Headline delay={6} size={80}>
+          Daarom heb je cravings.
         </Headline>
       </div>
+      <Body delay={14}>Te weinig eiwit geeft een dip in je energie, trek in zoet en een humeur dat schommelt.</Body>
 
-      <div style={{ marginTop: 30 }}>
-        <MuscleChart />
+      <div style={{ marginTop: 34 }}>
+        <EnergyCurve />
       </div>
 
-      <div
-        style={{
-          marginTop: 6,
-          color: COLORS.text,
-          fontSize: 40,
-          fontWeight: FONT.semi,
-          textAlign: "center",
-          fontVariantNumeric: "tabular-nums",
-          opacity: interpolate(frame, [58, 72], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
-        }}
-      >
-        Na je 35e:{" "}
-        <span style={{ color: COLORS.accent, fontWeight: FONT.headline }}>
-          −{loss}% spiermassa
-        </span>{" "}
-        per jaar
-      </div>
-
-      {/* hunger meter */}
-      <div style={{ width: 780, marginTop: 40, opacity: hunger }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            color: COLORS.textDim,
-            fontSize: 32,
-            fontWeight: FONT.semi,
-            marginBottom: 12,
-          }}
-        >
-          <span>Honger &amp; cravings</span>
-          <span style={{ color: COLORS.accent }}>hoog ↑</span>
-        </div>
-        <div style={{ height: 40, borderRadius: 12, background: COLORS.track, overflow: "hidden" }}>
-          <div
-            style={{
-              width: `${88 * hunger}%`,
-              height: "100%",
-              borderRadius: 12,
-              background: `linear-gradient(90deg, ${COLORS.accentSoft}, ${COLORS.accent})`,
-            }}
-          />
-        </div>
+      <div style={{ display: "flex", gap: 20, marginTop: 30 }}>
+        {chips.map((c, i) => {
+          const p = enter(frame, fps, 70 + i * 10);
+          return (
+            <div
+              key={c}
+              style={{
+                opacity: p,
+                transform: `translateY(${(1 - p) * 26}px)`,
+                padding: "18px 30px",
+                borderRadius: 999,
+                background: COLORS.bgSoft,
+                border: `1.5px solid ${COLORS.accent}`,
+                boxShadow: `0 12px 28px ${COLORS.shadow}`,
+                color: COLORS.text,
+                fontFamily: BODY_FONT,
+                fontSize: 34,
+                fontWeight: 600,
+              }}
+            >
+              {c}
+            </div>
+          );
+        })}
       </div>
     </SceneLayout>
   );

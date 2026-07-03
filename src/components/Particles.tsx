@@ -15,8 +15,8 @@ const PARTICLES = Array.from({ length: 14 }, (_, i) => {
     speed: 1.4 + rnd * 2.2,
     // spread starting heights across the whole frame so they never line up
     phase: (i / 14) * RANGE + rnd2 * 120,
-    color: i % 3 === 0 ? COLORS.success : COLORS.accent,
-    opacity: 0.25 + rnd2 * 0.4,
+    color: i % 3 === 0 ? COLORS.accentDeep : COLORS.accent,
+    opacity: 0.18 + rnd2 * 0.28,
     drift: (rnd - 0.5) * 70,
   };
 });
@@ -49,8 +49,7 @@ export const Particles: React.FC = () => {
               borderRadius: "50%",
               background: p.color,
               opacity: fade,
-              filter: "blur(1px)",
-              boxShadow: `0 0 ${p.size}px ${p.color}`,
+              filter: "blur(0.5px)",
             }}
           />
         );

@@ -10,21 +10,26 @@ export const TRANSITION = 12; // 12-frame fade
 export const DURATION_IN_FRAMES = SCENE_DURATION * 5 - TRANSITION * 4; // 852
 
 // ---------------------------------------------------------------------------
-// Colour system (as specified)
+// Brand colour system — Ilse Vanesch / Level Up by Fitmarathon
+//   blush #E48D8E · cream #FAF7F6 · ink #1A1717
 // ---------------------------------------------------------------------------
 export const COLORS = {
-  bg: "#0a0a0a",
-  bgSoft: "#141417",
-  text: "#ffffff",
-  textDim: "#a1a1aa",
-  accent: "#6366f1", // indigo
-  accentSoft: "#2a2a4a",
-  accentGlow: "rgba(99,102,241,0.35)",
-  success: "#22c55e", // green
-  successSoft: "#123522",
-  successGlow: "rgba(34,197,94,0.35)",
-  track: "#26262b",
-  cardBorder: "rgba(255,255,255,0.08)",
+  bg: "#FAF7F6", // cream
+  bgSoft: "#FFFFFF", // card surface
+  bgWarm: "#F3ECEA", // warm cream tint
+  text: "#1A1717", // ink
+  textDim: "#8A807D", // muted ink
+  accent: "#E48D8E", // blush
+  accentDeep: "#C56B6C", // deeper blush for emphasis
+  accentSoft: "#F7E4E4", // pale blush tint (pills, icon backdrops)
+  accentGlow: "rgba(228,141,142,0.35)",
+  // "emphasis" tokens map to the deep blush (brand has no green)
+  success: "#C56B6C",
+  successSoft: "#F7E4E4",
+  successGlow: "rgba(197,107,108,0.35)",
+  track: "#EBE1DE", // light track on cream
+  cardBorder: "rgba(26,23,23,0.08)",
+  shadow: "rgba(26,23,23,0.10)",
 };
 
 // ---------------------------------------------------------------------------
