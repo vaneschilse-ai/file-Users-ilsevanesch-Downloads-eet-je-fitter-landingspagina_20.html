@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kaart van de dag — Level Up</title>
+<meta name="description" content="Trek elke dag jouw Level Up oracle-kaart: een affirmatie en boodschap om je dag mee te starten." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF7F6;
+    --bg-warm:#F3ECEA;
+    --ink:#1A1717;
+    --ink-dim:#8A807D;
+    --blush:#E48D8E;
+    --blush-deep:#C56B6C;
+    --blush-soft:#F7E4E4;
+    --card-border: rgba(26,23,23,0.08);
+    --shadow: rgba(26,23,23,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+    background:
+      radial-gradient(circle at 15% 10%, var(--blush-soft) 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, var(--blush-soft) 0%, transparent 45%),
+      var(--cream);
+    color:var(--ink);
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .wrap{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:32px 20px 48px;
+  }
+  header{
+    text-align:center;
+    margin-bottom:28px;
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--blush-deep);
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Playfair Display', Georgia, serif;
+    font-size:clamp(26px, 5vw, 36px);
+    margin:0;
+    font-weight:700;
+  }
+  .sub{
+    color:var(--ink-dim);
+    font-size:14px;
+    margin-top:8px;
+    max-width:420px;
+  }
+
+  .stage{
+    position:relative;
+    width:min(320px, 82vw);
+    height:min(460px, 82vw * 1.44);
+    perspective:1400px;
+  }
+  .card{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border-radius:24px;
+    cursor:pointer;
+    transform-style:preserve-3d;
+    transition:transform .8s cubic-bezier(.34,1.56,.64,1);
+  }
+  .card.flipped{
+    transform:rotateY(180deg);
+    cursor:default;
+  }
+  .card.locked{cursor:default;}
+  .face{
+    position:absolute;
+    inset:0;
+    border-radius:24px;
+    backface-visibility:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 18px 40px var(--shadow);
+    border:1px solid var(--card-border);
+    padding:28px;
+    text-align:center;
+  }
+  .face-back{
+    background:
+      linear-gradient(155deg, var(--blush) 0%, var(--blush-deep) 100%);
+    color:#fff;
+  }
+  .face-back .glyph{
+    width:74px;
+    height:74px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Playfair Display', serif;
+    font-size:30px;
+    margin-bottom:18px;
+  }
+  .face-back .brand-mark{
+    font-family:'Playfair Display', serif;
+    font-size:19px;
+    letter-spacing:.04em;
+  }
+  .face-back .hint{
+    margin-top:14px;
+    font-size:12.5px;
+    opacity:.85;
+    letter-spacing:.03em;
+  }
+  .face-back::before{
+    content:"";
+    position:absolute;
+    inset:14px;
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:16px;
+    pointer-events:none;
+  }
+
+  .face-front{
+    background:var(--bg-warm);
+    transform:rotateY(180deg);
+    justify-content:flex-start;
+    overflow-y:auto;
+  }
+  .face-front .title{
+    font-family:'Playfair Display', serif;
+    font-size:24px;
+    font-weight:700;
+    color:var(--blush-deep);
+    margin:6px 0 14px;
+  }
+  .face-front .divider{
+    width:36px;
+    height:2px;
+    background:var(--blush);
+    margin-bottom:16px;
+    border-radius:2px;
+  }
+  .face-front .affirmation{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:16.5px;
+    line-height:1.5;
+    margin:0 0 16px;
+  }
+  .face-front .message{
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--ink);
+    opacity:.85;
+  }
+
+  .actions{
+    margin-top:26px;
+    text-align:center;
+  }
+  button.draw{
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    padding:14px 30px;
+    border-radius:999px;
+    font-size:14.5px;
+    font-weight:600;
+    letter-spacing:.02em;
+    cursor:pointer;
+    box-shadow:0 10px 24px rgba(26,23,23,0.18);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  button.draw:hover{transform:translateY(-2px); box-shadow:0 14px 28px rgba(26,23,23,0.22);}
+  button.draw:active{transform:translateY(0);}
+  button.draw:disabled{opacity:.5; cursor:default; transform:none;}
+
+  .status{
+    margin-top:16px;
+    font-size:12.5px;
+    color:var(--ink-dim);
+  }
+  .streak{
+    margin-top:6px;
+    font-size:12.5px;
+    color:var(--blush-deep);
+    font-weight:600;
+  }
+
+  footer{
+    margin-top:40px;
+    font-size:11px;
+    color:var(--ink-dim);
+    text-align:center;
+  }
+
+  @media (max-width:380px){
+    .face{padding:22px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Level Up · dagelijks ritueel</div>
+    <h1>Jouw kaart van de dag</h1>
+    <p class="sub">Trek elke dag één kaart uit de Level Up oracle-set en neem de affirmatie mee in je dag.</p>
+  </header>
+
+  <div class="stage">
+    <div class="card" id="card">
+      <div class="face face-back">
+        <div class="glyph">✦</div>
+        <div class="brand-mark">Level Up</div>
+        <div class="hint" id="backHint">Tik om je kaart te trekken</div>
+      </div>
+      <div class="face face-front" id="front">
+        <div class="title" id="cardTitle">—</div>
+        <div class="divider"></div>
+        <div class="affirmation" id="cardAffirmation">—</div>
+        <div class="message" id="cardMessage">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="draw" id="drawBtn">Trek je kaart</button>
+    <div class="status" id="status"></div>
+    <div class="streak" id="streak"></div>
+  </div>
+
+  <footer>Eén kaart per dag · nieuwe kaart om middernacht</footer>
+</div>
+
+<script>
+(function(){
+  var CARDS = [
+    {title:"Groei", affirmation:"Ik groei elke dag, op mijn eigen tempo.", message:"Groei gebeurt stap voor stap. Ook als je het nog niet ziet, ben je vooruitgang aan het boeken. Vertrouw op het proces en blijf kiezen voor kleine, positieve veranderingen. Alles wat je vandaag doet, draagt bij aan de persoon die je morgen bent."},
+    {title:"Balans", affirmation:"Ik creëer balans in lichaam, geest en leven.", message:"Balans betekent niet dat alles perfect is. Het betekent dat je aandacht geeft aan wat je nodig hebt. Werk hard wanneer het nodig is, rust wanneer je lichaam daarom vraagt en vergeet niet te genieten van de kleine momenten."},
+    {title:"Energie", affirmation:"Mijn energie groeit met elke gezonde keuze.", message:"Jouw energie is waardevol. Kies vandaag voor gewoontes, gedachten en mensen die je kracht geven. Hoe beter je voor jezelf zorgt, hoe meer energie je hebt om jouw doelen na te streven."},
+    {title:"Vertrouwen", affirmation:"Ik vertrouw op mezelf en mijn pad.", message:"Je hoeft niet alles vandaag al te weten. Neem de volgende stap met vertrouwen. Elke ervaring brengt je dichter bij waar je hoort te zijn. Geloof in jezelf, ook wanneer de weg nog niet helemaal zichtbaar is."},
+    {title:"Dankbaarheid", affirmation:"Dankbaarheid brengt overvloed in mijn leven.", message:"Sta vandaag stil bij alles wat al goed gaat. Door dankbaar te zijn voor het kleine, zie je steeds meer mooie dingen om je heen. Dankbaarheid verandert je blik en opent de deur naar nieuwe mogelijkheden."},
+    {title:"Focus", affirmation:"Mijn aandacht gaat naar wat echt belangrijk is.", message:"Laat je niet afleiden door wat anderen doen. Richt je aandacht op jouw eigen doelen en dromen. Eén bewuste stap vooruit brengt je verder dan wachten op het perfecte moment."},
+    {title:"Doorzetten", affirmation:"Ik geef niet op.", message:"Uitdagingen horen bij groei. Wanneer iets moeilijk wordt, herinner jezelf eraan waarom je begonnen bent. Door vandaag vol te houden, bouw je aan de resultaten van morgen."},
+    {title:"Loslaten", affirmation:"Ik laat los wat mij niet meer dient.", message:"Niet alles hoef je mee te dragen. Laat oude twijfels, negatieve gedachten en teleurstellingen los. Zo ontstaat ruimte voor rust, nieuwe kansen en frisse energie."},
+    {title:"Zelfliefde", affirmation:"Ik ben goed zoals ik ben.", message:"Behandel jezelf met dezelfde vriendelijkheid die je aan anderen geeft. Je hoeft niet perfect te zijn om waardevol te zijn. Zelfliefde begint met jezelf accepteren én goed voor jezelf zorgen."},
+    {title:"Gezondheid", affirmation:"Ik kies voor een gezond en energiek leven.", message:"Je lichaam werkt iedere dag voor jou. Geef het de aandacht die het verdient. Kleine gezonde keuzes maken op de lange termijn het grootste verschil."},
+    {title:"Rust", affirmation:"Rust geeft mij nieuwe kracht.", message:"Gun jezelf een moment van stilte. Juist wanneer je vertraagt, laad je jezelf weer op. Rust is geen teken van zwakte, maar een bron van nieuwe energie."},
+    {title:"Moed", affirmation:"Ik durf nieuwe stappen te zetten.", message:"Moed betekent niet dat je geen angst voelt. Het betekent dat je ondanks die angst toch kiest voor groei. Vertrouw erop dat je sterker bent dan je denkt."},
+    {title:"Overvloed", affirmation:"Ik sta open voor overvloed.", message:"Er is meer mogelijk dan je nu kunt zien. Sta open voor kansen, nieuwe ontmoetingen en onverwachte mogelijkheden. Wat je aandacht geeft, groeit."},
+    {title:"Verbinding", affirmation:"Samen groeien we verder.", message:"Je hoeft het niet alleen te doen. Door open te staan voor anderen ontstaan mooie verbindingen. Samen delen, leren en groeien maakt elke reis waardevoller."},
+    {title:"Dromen", affirmation:"Mijn dromen zijn het waard om na te streven.", message:"Blijf geloven in jouw dromen, ook als ze nog ver weg lijken. Elke grote prestatie begon ooit met één idee en één eerste stap."},
+    {title:"Positiviteit", affirmation:"Ik kies voor een positieve mindset.", message:"Je kunt niet altijd bepalen wat er gebeurt, maar wel hoe je ermee omgaat. Kies ervoor om kansen te blijven zien en laat positiviteit je richting geven."},
+    {title:"Geduld", affirmation:"Ik vertrouw op de juiste timing.", message:"Goede dingen hebben tijd nodig. Blijf trouw aan jouw proces en geef jezelf de ruimte om te groeien. Alles ontwikkelt zich op het juiste moment."},
+    {title:"Kracht", affirmation:"Mijn innerlijke kracht groeit iedere dag.", message:"Kijk eens terug naar alles wat je al hebt overwonnen. Dat is het bewijs van jouw veerkracht. Vertrouw op de kracht die al in jou aanwezig is."},
+    {title:"Intuïtie", affirmation:"Ik vertrouw op mijn gevoel.", message:"Neem even de tijd om stil te worden. Vaak weet je diep van binnen al welke keuze goed voelt. Luister naar je intuïtie; die wijst je de weg."},
+    {title:"Vreugde", affirmation:"Ik kies bewust voor vreugde.", message:"Geluk zit vaak in kleine momenten. Sta vandaag stil bij iets dat je laat glimlachen. Door aandacht te geven aan vreugde, groeit je positieve energie."},
+    {title:"Nieuw begin", affirmation:"Elke dag biedt een nieuwe kans.", message:"Vandaag is een nieuw begin. Laat gisteren achter je en richt je op wat je nu kunt doen. Iedere zonsopgang geeft je opnieuw de mogelijkheid om te kiezen voor de toekomst die je wilt creëren."}
+  ];
+
+  var STORAGE_KEY = "levelup_oracle_v1";
+
+  function todayKey(){
+    var d = new Date();
+    return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+  }
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : { history: [] };
+    }catch(e){
+      return { history: [] };
+    }
+  }
+
+  function saveState(state){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  function pickCard(state){
+    var lastIndex = state.history.length
+      ? state.history[state.history.length - 1].index
+      : -1;
+    var idx;
+    do{
+      idx = Math.floor(Math.random() * CARDS.length);
+    } while (CARDS.length > 1 && idx === lastIndex);
+    return idx;
+  }
+
+  function computeStreak(history){
+    if(!history.length) return 0;
+    var streak = 1;
+    var cursor = new Date(history[history.length-1].date + "T00:00:00");
+    for(var i = history.length - 2; i >= 0; i--){
+      var prev = new Date(history[i].date + "T00:00:00");
+      var diffDays = Math.round((cursor - prev) / 86400000);
+      if(diffDays === 1){
+        streak++;
+        cursor = prev;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  function isoDate(d){
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  var cardEl = document.getElementById("card");
+  var drawBtn = document.getElementById("drawBtn");
+  var statusEl = document.getElementById("status");
+  var streakEl = document.getElementById("streak");
+  var backHint = document.getElementById("backHint");
+  var titleEl = document.getElementById("cardTitle");
+  var affirmationEl = document.getElementById("cardAffirmation");
+  var messageEl = document.getElementById("cardMessage");
+
+  var state = loadState();
+  var today = isoDate(new Date());
+  var last = state.history[state.history.length - 1];
+  var alreadyDrawnToday = last && last.date === today;
+
+  function renderCard(index){
+    var c = CARDS[index];
+    titleEl.textContent = c.title;
+    affirmationEl.textContent = c.affirmation;
+    messageEl.textContent = c.message;
+  }
+
+  function msUntilMidnight(){
+    var now = new Date();
+    var next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+    return next - now;
+  }
+
+  function formatCountdown(ms){
+    var h = Math.floor(ms / 3600000);
+    var m = Math.floor((ms % 3600000) / 60000);
+    var s = Math.floor((ms % 60000) / 1000);
+    return String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+  }
+
+  var countdownTimer = null;
+  function startCountdown(){
+    if(countdownTimer) clearInterval(countdownTimer);
+    function tick(){
+      var ms = msUntilMidnight();
+      if(ms <= 0){
+        location.reload();
+        return;
+      }
+      statusEl.textContent = "Nieuwe kaart over " + formatCountdown(ms);
+    }
+    tick();
+    countdownTimer = setInterval(tick, 1000);
+  }
+
+  function lockForToday(){
+    drawBtn.disabled = true;
+    drawBtn.textContent = "Kaart getrokken";
+    cardEl.classList.add("locked");
+    startCountdown();
+  }
+
+  function updateStreak(){
+    var s = computeStreak(state.history);
+    streakEl.textContent = s > 1 ? s + " dagen op rij 🔥" : "";
+  }
+
+  if(alreadyDrawnToday){
+    renderCard(last.index);
+    cardEl.classList.add("flipped");
+    lockForToday();
+  }
+  updateStreak();
+
+  cardEl.addEventListener("click", function(){
+    if(cardEl.classList.contains("flipped") || cardEl.classList.contains("locked")) return;
+    var idx = pickCard(state);
+    renderCard(idx);
+    cardEl.classList.add("flipped");
+    state.history.push({ date: today, index: idx });
+    saveState(state);
+    updateStreak();
+    lockForToday();
+  });
+
+  drawBtn.addEventListener("click", function(){
+    if(drawBtn.disabled) return;
+    cardEl.click();
+  });
+})();
+</script>
+</body>
+</html>
