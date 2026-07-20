@@ -4,111 +4,131 @@ import { SceneLayout } from "../components/SceneLayout";
 import { Narration } from "../components/Narration";
 import { Eyebrow, Headline, Body } from "../components/Typo";
 import { COLORS } from "../theme";
-import { HEADLINE_FONT, BODY_FONT } from "../font";
-import { enter, countUp } from "../helpers";
+import { BODY_FONT } from "../font";
+import { enter } from "../helpers";
 
-// Donut showing a plate: mostly carbs, tiny protein sliver.
-const Plate: React.FC = () => {
+// A little person glyph, drawn centred inside a node of radius r at (cx, cy).
+const Person: React.FC<{ cx: number; cy: number; r: number; color: string }> = ({
+  cx,
+  cy,
+  r,
+  color,
+}) => (
+  <>
+    <circle cx={cx} cy={cy - r * 0.28} r={r * 0.26} fill={color} />
+    <path
+      d={`M${cx - r * 0.42} ${cy + r * 0.5} Q${cx} ${cy - r * 0.02} ${
+        cx + r * 0.42
+      } ${cy + r * 0.5} Z`}
+      fill={color}
+    />
+  </>
+);
+
+/**
+ * A "?" that dissolves into a small connected network: one central node
+ * (you) links out to four others. Lines self-draw, nodes spring in.
+ */
+const NetworkSeed: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const R = 150;
-  const C = 2 * Math.PI * R;
-  const draw = enter(frame, fps, 18);
-  const proteinFrac = 0.15;
+
+  const cx = 350;
+  const cy = 250;
+  const sats = [
+    { x: 120, y: 110 },
+    { x: 580, y: 110 },
+    { x: 580, y: 400 },
+    { x: 120, y: 400 },
+  ];
+
+  const centerP = enter(frame, fps, 18);
+  const qFade = interpolate(frame, [30, 46], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
   return (
-    <svg width={400} height={400} viewBox="0 0 420 420">
-      <circle cx={210} cy={210} r={R} fill="none" stroke={COLORS.track} strokeWidth={54} />
-      {/* carbs arc (light blush) */}
+    <svg width={700} height={500} viewBox="0 0 700 500">
+      {/* connectors self-draw, then satellite nodes pop in */}
+      {sats.map((s, i) => {
+        const len = Math.hypot(s.x - cx, s.y - cy);
+        const draw = enter(frame, fps, 42 + i * 8);
+        const pop = enter(frame, fps, 50 + i * 8);
+        return (
+          <g key={i}>
+            <line
+              x1={cx}
+              y1={cy}
+              x2={s.x}
+              y2={s.y}
+              stroke={COLORS.accent}
+              strokeWidth={5}
+              strokeLinecap="round"
+              strokeDasharray={len}
+              strokeDashoffset={len * (1 - draw)}
+              opacity={0.7}
+            />
+            <circle
+              cx={s.x}
+              cy={s.y}
+              r={40 * pop}
+              fill={COLORS.bgSoft}
+              stroke={COLORS.accent}
+              strokeWidth={4}
+            />
+            <Person cx={s.x} cy={s.y} r={40 * pop} color={COLORS.accent} />
+          </g>
+        );
+      })}
+
+      {/* central node */}
       <circle
-        cx={210}
-        cy={210}
-        r={R}
-        fill="none"
-        stroke={COLORS.accent}
-        strokeWidth={54}
-        strokeLinecap="round"
-        strokeDasharray={C}
-        strokeDashoffset={C * (1 - (1 - proteinFrac) * draw)}
-        transform="rotate(-90 210 210)"
-        opacity={0.55}
-      />
-      {/* protein sliver (deep blush) */}
-      <circle
-        cx={210}
-        cy={210}
-        r={R}
-        fill="none"
+        cx={cx}
+        cy={cy}
+        r={72 * centerP}
+        fill={COLORS.accentSoft}
         stroke={COLORS.accentDeep}
-        strokeWidth={54}
-        strokeLinecap="round"
-        strokeDasharray={C}
-        strokeDashoffset={C * (1 - proteinFrac * draw)}
-        transform={`rotate(${-90 + (1 - proteinFrac) * 360} 210 210)`}
+        strokeWidth={6}
       />
-      <text x={210} y={198} textAnchor="middle" fill={COLORS.text} fontFamily={HEADLINE_FONT} fontSize={40} fontWeight={800}>
-        Je bord
-      </text>
-      <text x={210} y={246} textAnchor="middle" fill={COLORS.accentDeep} fontFamily={BODY_FONT} fontSize={30} fontWeight={600}>
-        15% eiwit
+      <Person cx={cx} cy={cy} r={72 * centerP} color={COLORS.accentDeep} />
+
+      {/* the dissolving question mark */}
+      <text
+        x={cx}
+        y={cy + 26}
+        textAnchor="middle"
+        fill={COLORS.accentDeep}
+        fontFamily={BODY_FONT}
+        fontSize={110}
+        fontWeight={800}
+        opacity={qFade}
+      >
+        ?
       </text>
     </svg>
   );
 };
 
 export const Scene1Hook: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const jij = enter(frame, fps, 40);
-  const nodig = enter(frame, fps, 52);
-  const pct = Math.round(countUp(frame, fps, 55, 60));
-
   return (
     <SceneLayout justify="flex-start">
       <Narration file="scene1.mp3" />
       <div style={{ marginTop: 8 }}>
-        <Eyebrow delay={0}>Eiwit-check</Eyebrow>
+        <Eyebrow delay={0}>Uitgelegd</Eyebrow>
       </div>
-      <div style={{ marginTop: 28 }}>
-        <Headline delay={6} size={86}>
-          Je eet te weinig eiwit.
+      <div style={{ marginTop: 26 }}>
+        <Headline delay={6} size={78}>
+          Hoe werkt netwerk&shy;marketing écht?
         </Headline>
       </div>
-      <Body delay={14}>En je voelt het — in je energie, je honger en je humeur.</Body>
+      <Body delay={14}>
+        Geen ingewikkeld verhaal. Een bedrijf geeft z&apos;n reclamegeld terug aan
+        mensen die het product delen.
+      </Body>
 
-      <div style={{ marginTop: 22 }}>
-        <Plate />
-      </div>
-
-      <div style={{ width: 780, marginTop: 12 }}>
-        {[
-          { label: "JIJ", value: jij * 0.55, color: COLORS.accent },
-          { label: "NODIG", value: nodig * 1.0, color: COLORS.accentDeep },
-        ].map((row) => (
-          <div key={row.label} style={{ display: "flex", alignItems: "center", marginBottom: 20 }}>
-            <div style={{ width: 150, color: COLORS.text, fontSize: 34, fontWeight: 600, fontFamily: BODY_FONT }}>
-              {row.label}
-            </div>
-            <div style={{ flex: 1, height: 46, borderRadius: 14, background: COLORS.track, overflow: "hidden" }}>
-              <div style={{ width: `${row.value * 100}%`, height: "100%", borderRadius: 14, background: row.color }} />
-            </div>
-          </div>
-        ))}
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: 4,
-            color: COLORS.textDim,
-            fontSize: 36,
-            fontWeight: 500,
-            fontFamily: BODY_FONT,
-            fontVariantNumeric: "tabular-nums",
-            opacity: interpolate(frame, [58, 74], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
-          }}
-        >
-          Gemiddeld haal je maar{" "}
-          <span style={{ color: COLORS.accentDeep, fontWeight: 600 }}>{pct}%</span> van wat je nodig hebt
-        </div>
+      <div style={{ marginTop: 30 }}>
+        <NetworkSeed />
       </div>
     </SceneLayout>
   );

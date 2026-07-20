@@ -6,17 +6,44 @@ import { Particles } from "../components/Particles";
 import { LogoBig, Butterfly } from "../components/Logo";
 import { COLORS } from "../theme";
 import { HEADLINE_FONT, BODY_FONT } from "../font";
-import { enter, countUp } from "../helpers";
+import { enter } from "../helpers";
+
+const Check: React.FC = () => (
+  <div
+    style={{
+      width: 56,
+      height: 56,
+      borderRadius: 999,
+      background: COLORS.accentDeep,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+    }}
+  >
+    <svg width={30} height={30} viewBox="0 0 24 24">
+      <path
+        d="M5 13 L10 18 L19 6"
+        fill="none"
+        stroke={COLORS.bgSoft}
+        strokeWidth={3.4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </div>
+);
+
+const perks = ["Flexibel, naast je leven", "Samen met het Level Up-team", "Op jouw tempo"];
 
 export const Scene5CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const logoP = enter(frame, fps, 4);
   const headP = enter(frame, fps, 16);
-  const cardP = enter(frame, fps, 30);
-  const grams = Math.round(countUp(frame, fps, 30, 40));
-  const urlP = enter(frame, fps, 52);
-  const signP = enter(frame, fps, 66);
+  const cardP = enter(frame, fps, 28);
+  const ctaP = enter(frame, fps, 64);
+  const signP = enter(frame, fps, 78);
 
   return (
     <SceneLayout justify="flex-start" showLogo={false}>
@@ -26,7 +53,7 @@ export const Scene5CTA: React.FC = () => {
       </AbsoluteFill>
 
       {/* big brand logo */}
-      <div style={{ marginTop: 10, opacity: logoP, transform: `translateY(${(1 - logoP) * 30}px)` }}>
+      <div style={{ marginTop: 6, opacity: logoP, transform: `translateY(${(1 - logoP) * 30}px)` }}>
         <LogoBig />
       </div>
 
@@ -37,71 +64,80 @@ export const Scene5CTA: React.FC = () => {
           marginTop: 40,
           fontFamily: HEADLINE_FONT,
           fontWeight: 800,
-          fontSize: 82,
+          fontSize: 76,
           color: COLORS.text,
           textAlign: "center",
+          lineHeight: 1.05,
+          maxWidth: 900,
           opacity: headP,
           transform: `translateY(${(1 - headP) * 34}px)`,
         }}
       >
-        Reset je ontbijt.
+        Bouw jouw netwerk mee op
       </h1>
 
-      {/* product card */}
+      {/* perks card */}
       <div
         style={{
           marginTop: 44,
           width: 900,
-          padding: "40px 44px",
+          padding: "38px 44px",
           borderRadius: 34,
           background: COLORS.bgSoft,
           border: `1.5px solid ${COLORS.accent}`,
           boxShadow: `0 26px 60px ${COLORS.shadow}`,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          gap: 12,
+          gap: 24,
           opacity: cardP,
-          transform: `translateY(${(1 - cardP) * 40}px) scale(${0.94 + cardP * 0.06})`,
+          transform: `translateY(${(1 - cardP) * 40}px) scale(${0.95 + cardP * 0.05})`,
         }}
       >
-        <div style={{ fontFamily: BODY_FONT, fontWeight: 600, fontSize: 30, letterSpacing: 4, color: COLORS.accentDeep }}>
-          FITMARATHON
-        </div>
-        <div style={{ fontFamily: HEADLINE_FONT, fontWeight: 800, fontSize: 56, color: COLORS.text, textAlign: "center", lineHeight: 1.05 }}>
-          Eiwitten &amp; Ontbijt Reset
-        </div>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 6 }}>
-          <span style={{ fontFamily: HEADLINE_FONT, fontWeight: 800, fontSize: 120, color: COLORS.accentDeep, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
-            {grams}
-          </span>
-          <span style={{ fontFamily: HEADLINE_FONT, fontWeight: 800, fontSize: 60, color: COLORS.text }}>g</span>
-          <span style={{ fontFamily: BODY_FONT, fontWeight: 500, fontSize: 40, color: COLORS.textDim, marginLeft: 10 }}>
-            eiwit om mee te starten
-          </span>
-        </div>
-        <div
-          style={{
-            marginTop: 14,
-            padding: "16px 36px",
-            borderRadius: 999,
-            background: COLORS.accent,
-            color: COLORS.bgSoft,
-            fontFamily: BODY_FONT,
-            fontWeight: 600,
-            fontSize: 36,
-            opacity: urlP,
-            transform: `scale(${0.9 + urlP * 0.1})`,
-          }}
-        >
-          my.ilse.fit/fitmarathon-ontbijt
-        </div>
+        {perks.map((perk, i) => {
+          const p = enter(frame, fps, 36 + i * 10);
+          return (
+            <div
+              key={perk}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 24,
+                opacity: p,
+                transform: `translateX(${(1 - p) * -36}px)`,
+              }}
+            >
+              <Check />
+              <span style={{ fontFamily: BODY_FONT, fontSize: 42, fontWeight: 600, color: COLORS.text }}>
+                {perk}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* CTA button */}
+      <div
+        style={{
+          marginTop: 44,
+          padding: "22px 52px",
+          borderRadius: 999,
+          background: COLORS.accent,
+          color: COLORS.bgSoft,
+          fontFamily: BODY_FONT,
+          fontWeight: 600,
+          fontSize: 44,
+          boxShadow: `0 18px 40px ${COLORS.accentGlow}`,
+          opacity: ctaP,
+          transform: `scale(${0.9 + ctaP * 0.1})`,
+        }}
+      >
+        Stuur me een DM 💬
       </div>
 
       {/* signature */}
       <div
         style={{
-          marginTop: 40,
+          marginTop: 34,
           display: "flex",
           alignItems: "center",
           gap: 14,

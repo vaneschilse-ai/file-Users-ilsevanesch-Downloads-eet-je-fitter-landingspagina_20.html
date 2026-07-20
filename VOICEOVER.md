@@ -1,18 +1,18 @@
 # Nederlandse voice-over — script & timing
 
 Warme, directe toon ("jij"), korte zinnen — Ilse's stem. Elke regel is één
-scène (~5,5 sec). Totaal ~28 sec.
+scène (~6,3 sec). Totaal ~30 sec. Eerlijk en bescheiden — geen "word snel rijk".
 
 Gekozen AI-stem: **Roman** — Higgsfield seed_audio
 `voice_id: 7e63ac18-5fcd-4aba-8078-a86d4e11c127`, `voice_type: preset`.
 
 | Scène | Bestand | Tekst |
 |------|---------|-------|
-| 1 | `public/vo/scene1.mp3` | Wat jij eet, voel jij. En van eiwit krijg je waarschijnlijk veel te weinig binnen. |
-| 2 | `public/vo/scene2.mp3` | Het begint al bij je ontbijt. Brood, havermout of yoghurt geven maar weinig eiwit. |
-| 3 | `public/vo/scene3.mp3` | En dat voel je. Een dip in je energie, trek in zoet, en een humeur dat schommelt. |
-| 4 | `public/vo/scene4.mp3` | Eiwit is je fundament. Het houdt je langer vol en geeft rust en stabiele energie. |
-| 5 | `public/vo/scene5.mp3` | Reset daarom je ontbijt. Start met dertig gram eiwit, en voel het verschil. Liefs, Ilse. |
+| 1 | `public/vo/scene1.mp3` | Hoe werkt netwerkmarketing nou écht? Simpel: een bedrijf geeft z'n reclamegeld terug aan mensen die het product delen. |
+| 2 | `public/vo/scene2.mp3` | In de winkel betaalt een merk dure reclame en tussenhandel. In een netwerk gaat die marge naar wie het aanbeveelt — naar jou. |
+| 3 | `public/vo/scene3.mp3` | Het werkt zo: jij gebruikt het product, deelt je resultaat, en tevreden klanten blijven. Een paar bouwen mee. |
+| 4 | `public/vo/scene4.mp3` | Je verdient aan je eigen verkoop, én een klein deel over je team. Dat is hefboom: niet harder werken, maar samen. |
+| 5 | `public/vo/scene5.mp3` | Wil jij dit ook opbouwen? Flexibel, op jouw tempo, met het Level Up-team. Stuur me een DM. Liefs, Ilse. |
 
 ## Zo zet je de voice-over aan
 
@@ -24,9 +24,7 @@ Gekozen AI-stem: **Roman** — Higgsfield seed_audio
    `SCENE_DURATION` (of een losse scène) aan in `src/theme.ts` zodat beeld
    en stem gelijk lopen.
 
-## AI genereren (zodra er weer Higgsfield-credits zijn)
+## AI genereren (zodra er weer credits zijn)
 
-De helper `scripts/generate-vo.md` bevat de exacte tool-aanroepen met de
-Roman-stem. Op dit moment lukt genereren niet: de Higgsfield-workspace staat
-op **0 credits** en Pika is niet gekoppeld. Vul credits aan (of koppel Pika)
-en de 5 regels kunnen in één keer gegenereerd worden.
+De 5 regels hierboven kunnen in één keer met de Roman-stem gegenereerd worden.
+Vul Higgsfield-credits aan (of koppel Pika) en genereer scene1…scene5.

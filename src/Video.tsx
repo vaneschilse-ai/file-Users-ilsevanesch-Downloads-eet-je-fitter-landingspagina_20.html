@@ -3,20 +3,20 @@ import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { SCENE_DURATION, TRANSITION } from "./theme";
 import { Scene1Hook } from "./scenes/Scene1Hook";
-import { Scene2Breakfast } from "./scenes/Scene2Breakfast";
-import { Scene3Deficit } from "./scenes/Scene3Deficit";
-import { Scene4Benefits } from "./scenes/Scene4Benefits";
+import { Scene2Difference } from "./scenes/Scene2Difference";
+import { Scene3Mechanism } from "./scenes/Scene3Mechanism";
+import { Scene4Leverage } from "./scenes/Scene4Leverage";
 import { Scene5CTA } from "./scenes/Scene5CTA";
 
 const scenes = [
   Scene1Hook,
-  Scene2Breakfast,
-  Scene3Deficit,
-  Scene4Benefits,
+  Scene2Difference,
+  Scene3Mechanism,
+  Scene4Leverage,
   Scene5CTA,
 ];
 
-export const EiwittenExplainer: React.FC = () => {
+export const NetwerkmarketingExplainer: React.FC = () => {
   return (
     <TransitionSeries>
       {scenes.map((Scene, i) => (

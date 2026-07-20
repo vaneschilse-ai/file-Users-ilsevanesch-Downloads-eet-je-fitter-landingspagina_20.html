@@ -1,7 +1,8 @@
-# Waarom je te weinig eiwitten eet — Remotion explainer
+# Hoe netwerkmarketing werkt — Remotion explainer
 
-Educatieve verticale explainer video (1080×1920, 30fps, ~28s) opgebouwd met
-[Remotion](https://www.remotion.dev/).
+Educatieve verticale explainer video (1080×1920, 30fps, ~30s) opgebouwd met
+[Remotion](https://www.remotion.dev/), in de huisstijl van **Ilse Vanesch /
+Level Up by Fitmarathon**.
 
 ## Preview / bewerken
 
@@ -20,19 +21,25 @@ npm run build       # -> out/video.mp4
 
 - `src/Video.tsx` — koppelt de 5 scènes met `TransitionSeries` (12-frame fades)
 - `src/scenes/` — één component per scène
-  1. `Scene1Hook` — "Je eet te weinig eiwit." (bord-donut + JIJ vs NODIG)
-  2. `Scene2Breakfast` — ontbijt-oorzaak (eiwit per ontbijtproduct)
-  3. `Scene3Deficit` — spierverlies (zelftekenende grafiek + hongermeter)
-  4. `Scene4Benefits` — voordelen van eiwit (3 kaarten)
-  5. `Scene5CTA` — "Mik op 30g per maaltijd" (count-up + checklist + particles)
+  1. `Scene1Hook` — "Hoe werkt netwerkmarketing écht?" (? → zelftekenend netwerk)
+  2. `Scene2Difference` — traditioneel vs netwerk (twee zelftekenende flowcharts)
+  3. `Scene3Mechanism` — gebruiken → delen → groeien (zelfbouwende team-boom)
+  4. `Scene4Leverage` — hefboom & duplicatie (vermenigvuldigende nodes + count-up)
+  5. `Scene5CTA` — "Bouw jouw netwerk mee op" (checklist + particles + DM-CTA)
 - `src/theme.ts` — kleuren, safe zone, formaat
 - `src/helpers.ts` — spring-entrance, count-up helpers
-- `src/components/` — gedeelde UI (SceneLayout, typografie, particles)
-- `public/fonts/` — zelf-gehoste Inter (400/600/800) zodat renderen offline werkt
+- `src/components/` — gedeelde UI (SceneLayout, typografie, particles, logo)
+- `src/Cover.tsx` — Reel-voorblad (gecentreerd voor feed-grid crop)
+- `public/fonts/` — zelf-gehoste Playfair Display + DM Sans (offline render)
 
 ## Ontwerp
 
-- Achtergrond `#0a0a0a`, wit, indigo `#6366f1`, groen `#22c55e`, Inter.
-- Alle iconen/diagrammen zijn SVG-componenten (geen externe assets).
+- Achtergrond cream `#FAF7F6`, ink `#1A1717`, blush `#E48D8E`, diepe blush
+  `#C56B6C` voor nadruk (geen groen — merk-conform).
+- Koppen Playfair Display, body DM Sans. Alle iconen/diagrammen zijn
+  SVG-componenten (geen externe assets).
 - Alle entrees via `spring({ damping: 200 })`, gestaggerd 8–12 frames.
+- Diagrammen tekenen zichzelf (`stroke-dashoffset`), getallen tellen op
+  (`tabular-nums`). Slotscène heeft een particle-achtergrond.
 - Safe zone: 150px top, 170px bottom, 60px zijkanten.
+- Cijfers in scène 4 zijn illustratief (voorbeeld) en zo gelabeld.

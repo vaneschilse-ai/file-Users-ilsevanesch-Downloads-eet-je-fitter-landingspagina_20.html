@@ -1,5 +1,5 @@
 import { Composition, Still } from "remotion";
-import { EiwittenExplainer } from "./Video";
+import { NetwerkmarketingExplainer } from "./Video";
 import { Cover } from "./Cover";
 import { FPS, DURATION_IN_FRAMES, WIDTH, HEIGHT } from "./theme";
 
@@ -7,8 +7,8 @@ export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Composition
-        id="EiwittenExplainer"
-        component={EiwittenExplainer}
+        id="NetwerkmarketingExplainer"
+        component={NetwerkmarketingExplainer}
         durationInFrames={DURATION_IN_FRAMES}
         fps={FPS}
         width={WIDTH}

@@ -9,44 +9,41 @@ import { LogoMark, Butterfly } from "./components/Logo";
  * middle ~1080x1080 so it survives Instagram's feed-grid crop (1:1 / 4:5).
  */
 
-const PlateStatic: React.FC = () => {
-  const R = 150;
-  const C = 2 * Math.PI * R;
-  const proteinFrac = 0.15;
+const Person: React.FC<{ cx: number; cy: number; r: number; color: string }> = ({
+  cx,
+  cy,
+  r,
+  color,
+}) => (
+  <>
+    <circle cx={cx} cy={cy - r * 0.28} r={r * 0.26} fill={color} />
+    <path
+      d={`M${cx - r * 0.42} ${cy + r * 0.5} Q${cx} ${cy - r * 0.02} ${cx + r * 0.42} ${cy + r * 0.5} Z`}
+      fill={color}
+    />
+  </>
+);
+
+const NetworkStatic: React.FC = () => {
+  const cx = 200;
+  const cy = 200;
+  const sats = [
+    { x: 40, y: 60 },
+    { x: 360, y: 60 },
+    { x: 360, y: 340 },
+    { x: 40, y: 340 },
+  ];
   return (
-    <svg width={360} height={360} viewBox="0 0 420 420">
-      <circle cx={210} cy={210} r={R} fill="none" stroke={COLORS.track} strokeWidth={54} />
-      <circle
-        cx={210}
-        cy={210}
-        r={R}
-        fill="none"
-        stroke={COLORS.accent}
-        strokeWidth={54}
-        strokeLinecap="round"
-        strokeDasharray={C}
-        strokeDashoffset={C * proteinFrac}
-        transform="rotate(-90 210 210)"
-        opacity={0.55}
-      />
-      <circle
-        cx={210}
-        cy={210}
-        r={R}
-        fill="none"
-        stroke={COLORS.accentDeep}
-        strokeWidth={54}
-        strokeLinecap="round"
-        strokeDasharray={C}
-        strokeDashoffset={C * (1 - proteinFrac)}
-        transform={`rotate(${-90 + (1 - proteinFrac) * 360} 210 210)`}
-      />
-      <text x={210} y={196} textAnchor="middle" fill={COLORS.text} fontFamily={HEADLINE_FONT} fontSize={44} fontWeight={800}>
-        15%
-      </text>
-      <text x={210} y={244} textAnchor="middle" fill={COLORS.accentDeep} fontFamily={BODY_FONT} fontSize={30} fontWeight={600}>
-        eiwit
-      </text>
+    <svg width={400} height={400} viewBox="0 0 400 400">
+      {sats.map((s, i) => (
+        <g key={i}>
+          <line x1={cx} y1={cy} x2={s.x} y2={s.y} stroke={COLORS.accent} strokeWidth={5} strokeLinecap="round" opacity={0.7} />
+          <circle cx={s.x} cy={s.y} r={38} fill={COLORS.bgSoft} stroke={COLORS.accent} strokeWidth={4} />
+          <Person cx={s.x} cy={s.y} r={38} color={COLORS.accent} />
+        </g>
+      ))}
+      <circle cx={cx} cy={cy} r={64} fill={COLORS.accentSoft} stroke={COLORS.accentDeep} strokeWidth={6} />
+      <Person cx={cx} cy={cy} r={64} color={COLORS.accentDeep} />
     </svg>
   );
 };
@@ -90,10 +87,10 @@ export const Cover: React.FC = () => {
           }}
         >
           <Butterfly size={30} color={COLORS.accentDeep} />
-          Eiwit-check
+          Netwerkmarketing
         </div>
 
-        <PlateStatic />
+        <NetworkStatic />
 
         {/* hook */}
         <h1
@@ -102,16 +99,16 @@ export const Cover: React.FC = () => {
             marginTop: 30,
             fontFamily: HEADLINE_FONT,
             fontWeight: 800,
-            fontSize: 108,
-            lineHeight: 1.02,
+            fontSize: 100,
+            lineHeight: 1.03,
             color: COLORS.text,
             textAlign: "center",
             letterSpacing: -1,
           }}
         >
-          Eet jij genoeg
+          Hoe werkt
           <br />
-          eiwit?
+          netwerkmarketing?
         </h1>
 
         <p
@@ -123,10 +120,10 @@ export const Cover: React.FC = () => {
             fontSize: 42,
             color: COLORS.textDim,
             textAlign: "center",
-            maxWidth: 800,
+            maxWidth: 820,
           }}
         >
-          Wat jij eet, voel jij — in je energie, honger en humeur.
+          In 30 seconden uitgelegd — zonder ingewikkeld verhaal.
         </p>
 
         {/* logo */}

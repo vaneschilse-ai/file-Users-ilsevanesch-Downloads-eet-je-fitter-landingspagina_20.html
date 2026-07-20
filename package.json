@@ -1,11 +1,11 @@
 {
-  "name": "eiwitten-explainer",
+  "name": "netwerkmarketing-explainer",
   "version": "1.0.0",
-  "description": "Educatieve explainer video: Waarom je te weinig eiwitten eet",
+  "description": "Educatieve explainer video: Hoe netwerkmarketing werkt",
   "scripts": {
     "start": "remotion studio",
     "studio": "remotion studio",
-    "build": "remotion render EiwittenExplainer out/video.mp4",
+    "build": "remotion render NetwerkmarketingExplainer out/video.mp4",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

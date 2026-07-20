@@ -4,10 +4,10 @@
 export const WIDTH = 1080;
 export const HEIGHT = 1920;
 export const FPS = 30;
-export const SCENE_DURATION = 180; // 6s per scene
+export const SCENE_DURATION = 190; // ~6.3s per scene
 export const TRANSITION = 12; // 12-frame fade
-// 5 scenes of 180 frames, overlapping by 12 frames on each of the 4 joins.
-export const DURATION_IN_FRAMES = SCENE_DURATION * 5 - TRANSITION * 4; // 852
+// 5 scenes of 190 frames, overlapping by 12 frames on each of the 4 joins.
+export const DURATION_IN_FRAMES = SCENE_DURATION * 5 - TRANSITION * 4; // 902 (~30s)
 
 // ---------------------------------------------------------------------------
 // Brand colour system — Ilse Vanesch / Level Up by Fitmarathon
